@@ -1,24 +1,24 @@
 {
-  "name": "cacher-redis",
+  "name": "cacher-nedb",
   "version": "0.0.1",
-  "description": "A pluggable backend for Cacher that uses redis",
+  "description": "A pluggable backend for Cacher that uses nedb",
   "main": "index.js",
   "scripts": {
     "test": "mocha -R spec"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/addisonj/cacher-redis.git"
+    "url": "git@github.com:skiltz/cacher-nedb.git"
   },
   "keywords": [
     "cacher",
-    "redis",
+    "nedb",
     "http-caching"
   ],
-  "author": "addisonj",
+  "author": "Julien Noblet",
   "license": "BSD",
   "dependencies": {
-    "redback": "~0.3.5"
+    "nedb": "~0.10.4"
   },
   "devDependencies": {
     "mocha": "~1.10.0"
