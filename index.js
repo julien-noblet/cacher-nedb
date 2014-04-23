@@ -2,19 +2,21 @@ var Datastore = require('nedb')
 
 function now() { return (new Date()).getTime(); }
 
-function CacherNeDB(filename) {
-  filename = filename || null
+function CacherNeDB(options) {
+  options = options || null
   var db;
-  if (filename) 
-    db = new Datastore({ filename: filename, autoload: true });
+  if (options.filename) 
+    db = new Datastore({ filename: options.filename, autoload: true });
   else 
     db = new Datastore();
   db.ensureIndex({fieldName:"url",unique:true}); // ensure url as index
   db.persistence.setAutocompactionInterval(5000);
   this.cache = db;
-  setInterval(function(){
-    db.remove({ ttl: { $lt : now() } }, {});
-  }, 5000); // Cleaning every 5 sec old cache
+  if (options.cleanInterval!==null){
+    setInterval(function(){
+      db.remove({ ttl: { $lt : now() } }, {});
+    }, options.cleanInterval); // Cleaning every 5 sec old cache
+  }
 }
 
 CacherNeDB.prototype.set = function(key, cacheObject, ttl, cb) {

@@ -1,6 +1,6 @@
 {
   "name": "cacher-nedb",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A pluggable backend for Cacher that uses nedb",
   "main": "index.js",
   "scripts": {
