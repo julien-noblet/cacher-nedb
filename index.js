@@ -9,14 +9,18 @@ function CacherNeDB(filename) {
     db = new Datastore({ filename: filename, autoload: true });
   else 
     db = new Datastore();
+  db.ensureIndex({fieldName:"url",unique:true}); // ensure url as index
   db.persistence.setAutocompactionInterval(5000);
   this.cache = db;
+  setInterval(function(){
+    db.remove({ ttl: { $lt : now() } }, {});
+  }, 5000); // Cleaning every 5 sec old cache
 }
 
 CacherNeDB.prototype.set = function(key, cacheObject, ttl, cb) {
   cb = cb || function() {}
   if (typeof cacheObject == 'object') cacheObject = JSON.stringify(cacheObject)
-  this.cache.update({ url: key }, {url :key, object : cacheObject, ttl: ttl*1000, start:now()}, { upsert: true }, cb);
+  this.cache.update({ url: key }, {url :key, object : cacheObject, ttl: ttl*1000+now() }, { upsert: true }, cb);
 }
 
 CacherNeDB.prototype.get = function(key, cb) {
@@ -30,7 +34,7 @@ CacherNeDB.prototype.get = function(key, cb) {
       if (doc===null)
         cb(null, doc)
       else{
-        if (now() <= doc.start + doc.ttl)
+        if (now() <= doc.ttl)
           cb (null,JSON.parse(doc.object))
         else{
           cb (null,null)
