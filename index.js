@@ -10,7 +10,9 @@ function CacherNeDB(options) {
   else 
     db = new Datastore();
   db.ensureIndex({fieldName:"url",unique:true}); // ensure url as index
-  db.persistence.setAutocompactionInterval(5000);
+  if (options.compactionInterval!==null){
+    db.persistence.setAutocompactionInterval(options.compactionInterval);
+  }
   this.cache = db;
   if (options.cleanInterval!==null){
     setInterval(function(){
